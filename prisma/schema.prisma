@@ -16,10 +16,11 @@ datasource db {
 model User {
 id String @id @default(uuid())
 name String
+email String @unique
 password String
 age Int
 licenseYear Int
-bankAccount String
+bankAccount String?
 policies Policy[]
 }
 
@@ -41,7 +42,6 @@ status String
 type String
 phoneNumber String
 address String
-imgUrl String
 claimNumber Int @default(autoincrement())
 policy Policy @relation(fields: [policyId], references: [id])
 operator Operator? @relation(fields: [operatorId], references: [id])
