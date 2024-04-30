@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 const mockPrisma = {
   user: {
@@ -62,13 +63,7 @@ describe('UsersService', () => {
   });
   describe('When we use the method create', () => {
     it('Then it should return the new user', async () => {
-      const result = await service.create({
-        name: 'pepe',
-        email: 'email',
-        age: 35,
-        licenseYear: 18,
-        password: 'GHgndbdfas567*¨?32**',
-      });
+      const result = await service.create({} as CreateUserDto);
       expect(mockPrisma.user.create).toHaveBeenCalled();
 
       expect(result).toEqual({});
