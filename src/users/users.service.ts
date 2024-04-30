@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 const select = {
   id: true,
@@ -69,17 +69,6 @@ export class UsersService {
       return await this.prisma.user.update({
         where: { id },
         data,
-        select,
-      });
-    } catch (error) {
-      throw new NotFoundException(`User ${id} not found`);
-    }
-  }
-
-  async delete(id: string) {
-    try {
-      return await this.prisma.user.delete({
-        where: { id },
         select,
       });
     } catch (error) {

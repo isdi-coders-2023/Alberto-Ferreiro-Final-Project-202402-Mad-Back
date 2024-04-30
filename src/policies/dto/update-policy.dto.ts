@@ -4,7 +4,7 @@ import { CreatePolicyDto } from './create-policy.dto';
 export class UpdatePolicyDto extends PartialType(CreatePolicyDto) {
   carMake?: string;
   carModel?: string;
-  carAge?: string;
+  carAge?: number;
   plateNumber?: string;
   policyType: string;
 }

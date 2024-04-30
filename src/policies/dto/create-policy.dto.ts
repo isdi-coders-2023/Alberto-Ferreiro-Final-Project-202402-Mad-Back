@@ -1,7 +1,8 @@
 export class CreatePolicyDto {
   carMake: string;
   carModel: string;
-  carAge: string;
+  carAge: number;
   plateNumber: string;
   policyType: string;
+  userId: string;
 }
