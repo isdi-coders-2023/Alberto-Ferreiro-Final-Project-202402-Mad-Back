@@ -67,7 +67,7 @@ describe('UsersService', () => {
         email: 'email',
         age: 35,
         licenseYear: 18,
-        password: '12345',
+        password: 'GHgndbdfas567*¨?32**',
       });
       expect(mockPrisma.user.create).toHaveBeenCalled();
 

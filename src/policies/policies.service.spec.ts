@@ -89,7 +89,7 @@ describe('PoliciesService', () => {
       mockPrisma.policy.delete.mockRejectedValueOnce(
         new Error('Policy not found'),
       );
-      expect(service.delete('1')).rejects.toThrow('Policy 1 not found');
+      expect(service.delete('2')).rejects.toThrow('Policy 2 not found');
     });
   });
 });

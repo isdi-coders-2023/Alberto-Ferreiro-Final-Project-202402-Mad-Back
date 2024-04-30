@@ -3,6 +3,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 const mockUsersService = {
   findAll: jest.fn().mockResolvedValue([]),
@@ -70,8 +71,8 @@ describe('UsersController', () => {
   describe('When we use the method update', () => {
     it('should update a user', async () => {
       const mockUserDto = {
-        password: '12345',
-      } as CreateUserDto;
+        passemail: 'cara@papa.com',
+      } as UpdateUserDto;
       const result = await controller.update('1', mockUserDto);
       expect(mockUsersService.update).toHaveBeenCalled();
       expect(result).toEqual({});
