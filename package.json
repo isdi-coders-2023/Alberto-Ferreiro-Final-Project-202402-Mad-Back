@@ -79,7 +79,9 @@
     "coveragePathIgnorePatterns": [
       "module",
       "dto",
-      "entity"
+      "entity",
+      "main",
+      "prisma"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

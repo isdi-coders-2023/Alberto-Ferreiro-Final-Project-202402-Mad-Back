@@ -3,8 +3,8 @@ export class Policy {
   userId: number;
   carMake: string;
   carModel: string;
-  carAge: string;
-  plateNumber: string;
+  carAge: number;
+  plateNumber: number;
   policyNumber: string;
   policyType: string;
   claims: Claim[];

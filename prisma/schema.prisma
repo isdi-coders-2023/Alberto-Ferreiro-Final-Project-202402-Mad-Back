@@ -29,7 +29,10 @@ id String @id @default(uuid())
 userId String
 carMake String
 carModel String
-policyNumber Int @default(autoincrement())
+carAge Int
+plateNumber String
+policyType String
+policyNumber Int @default(autoincrement()) @unique
 claims Claim[]
 user User @relation(fields: [userId], references: [id])
 }
