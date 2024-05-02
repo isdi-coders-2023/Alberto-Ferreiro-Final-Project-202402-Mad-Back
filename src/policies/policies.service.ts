@@ -10,6 +10,7 @@ const select = {
   carAge: true,
   plateNumber: true,
   policyNumber: true,
+  userId: true,
   claims: {
     select: {
       status: true,
@@ -34,37 +35,37 @@ export class PoliciesService {
     return this.prisma.policy.findMany({ select });
   }
 
-  async findOne(id: string) {
+  async findOne(inputId: string) {
     const policy = await this.prisma.policy.findUnique({
-      where: { id },
+      where: { id: inputId },
       select,
     });
     if (!policy) {
-      throw new NotFoundException(`Policy ${id} not found`);
+      throw new NotFoundException(`Policy ${inputId} not found`);
     }
     return policy;
   }
 
-  async update(id: string, data: UpdatePolicyDto) {
+  async update(inputId: string, data: UpdatePolicyDto) {
     try {
       return await this.prisma.policy.update({
-        where: { id },
+        where: { id: inputId },
         data,
         select,
       });
     } catch (error) {
-      throw new NotFoundException(`Policy ${id} not found`);
+      throw new NotFoundException(`Policy ${inputId} not found`);
     }
   }
 
-  async delete(id: string) {
+  async delete(inputId: string) {
     try {
       return await this.prisma.policy.delete({
-        where: { id },
+        where: { id: inputId },
         select,
       });
     } catch (error) {
-      throw new NotFoundException(`Policy ${id} not found`);
+      throw new NotFoundException(`Policy ${inputId} not found`);
     }
   }
 }

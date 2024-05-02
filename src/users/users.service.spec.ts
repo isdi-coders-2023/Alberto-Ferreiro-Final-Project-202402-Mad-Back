@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CryptoService } from '../core/crypto/crypto.service';
 
 const mockPrisma = {
   user: {
@@ -11,6 +13,10 @@ const mockPrisma = {
     update: jest.fn().mockReturnValue({}),
   },
 };
+const mockCryptoService = {
+  hash: jest.fn().mockResolvedValue(''),
+  compare: jest.fn().mockResolvedValue(''),
+};
 describe('UsersService', () => {
   let service: UsersService;
 
@@ -18,6 +24,7 @@ describe('UsersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: CryptoService, useValue: mockCryptoService },
         UsersService,
       ],
     }).compile();
@@ -71,7 +78,7 @@ describe('UsersService', () => {
   });
   describe('When we use the method update', () => {
     it('Then it should return the updated user', async () => {
-      const result = await service.update('1', {});
+      const result = await service.update('1', {} as UpdateUserDto);
       expect(mockPrisma.user.update).toHaveBeenCalled();
       expect(result).toEqual({});
     });

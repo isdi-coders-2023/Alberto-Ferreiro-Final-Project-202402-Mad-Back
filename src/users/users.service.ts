@@ -6,6 +6,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { CryptoService } from '../core/crypto/crypto.service';
 
 const select = {
   id: true,
@@ -23,8 +24,12 @@ const select = {
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private crypto: CryptoService,
+  ) {}
   async create(data: CreateUserDto) {
+    data.password = await this.crypto.hash(data.password);
     return this.prisma.user.create({
       data,
       select,
@@ -35,22 +40,22 @@ export class UsersService {
     return this.prisma.user.findMany({ select });
   }
 
-  async findOne(id: string) {
+  async findOne(inputId: string) {
     const user = await this.prisma.user.findUnique({
-      where: { id },
+      where: { id: inputId },
       select,
     });
 
     if (!user) {
-      throw new NotFoundException(`User ${id} not found`);
+      throw new NotFoundException(`User ${inputId} not found`);
     }
 
     return user;
   }
 
-  async findForLogin(email: string) {
+  async findForLogin(inputEmail: string) {
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { email: inputEmail },
       select: {
         email: true,
         password: true,

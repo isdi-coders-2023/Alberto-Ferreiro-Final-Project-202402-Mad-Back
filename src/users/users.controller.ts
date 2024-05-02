@@ -7,13 +7,18 @@ import {
   Param,
   BadRequestException,
   ForbiddenException,
+  UsePipes,
+  ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CryptoService } from '../core/crypto/crypto.service';
 import { SignUser } from './entities/user.entity';
+import { LoggedGuard } from '../core/auth/logged.guard';
 
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('users')
 export class UsersController {
   constructor(
@@ -21,14 +26,14 @@ export class UsersController {
     private readonly crypto: CryptoService,
   ) {}
 
-  @Post()
+  @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Post('login')
-  async login(@Body() createUserDto: SignUser) {
-    const { email, password } = createUserDto;
+  async login(@Body() data: SignUser) {
+    const { email, password } = data;
     if (!email || !password) {
       throw new BadRequestException('Email and password are required');
     }
@@ -55,7 +60,7 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
-
+  @UseGuards(LoggedGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);

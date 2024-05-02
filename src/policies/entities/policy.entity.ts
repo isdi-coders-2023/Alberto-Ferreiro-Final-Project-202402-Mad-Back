@@ -1,6 +1,6 @@
 export class Policy {
   id: string;
-  userId: number;
+  userId: string;
   carMake: string;
   carModel: string;
   carAge: number;
