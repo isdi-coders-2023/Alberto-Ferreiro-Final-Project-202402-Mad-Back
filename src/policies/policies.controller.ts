@@ -13,8 +13,8 @@ import {
 import { PoliciesService } from './policies.service';
 import { CreatePolicyDto } from './dto/create-policy.dto';
 import { UpdatePolicyDto } from './dto/update-policy.dto';
-import { PolicyOwnerGuard } from 'src/core/auth/owner.guard';
-import { LoggedGuard } from 'src/core/auth/logged.guard';
+import { PolicyOwnerGuard } from '../core/auth/owner.guard';
+import { LoggedGuard } from '../core/auth/logged.guard';
 
 @UsePipes(
   new ValidationPipe({

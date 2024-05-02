@@ -3,6 +3,7 @@ import { PoliciesController } from './policies.controller';
 import { PoliciesService } from './policies.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePolicyDto } from './dto/create-policy.dto';
+import { CryptoService } from '../core/crypto/crypto.service';
 
 const mockPoliciesService = {
   findAll: jest.fn().mockResolvedValue([]),
@@ -21,6 +22,12 @@ const mockPrismaService = {
   },
 };
 
+const mockCryptoService = {
+  hash: jest.fn().mockResolvedValue('12345hash'),
+  compare: jest.fn().mockResolvedValue(true),
+  createToken: jest.fn().mockResolvedValue('token'),
+};
+
 describe('PoliciesController', () => {
   let controller: PoliciesController;
 
@@ -36,6 +43,10 @@ describe('PoliciesController', () => {
         {
           provide: PrismaService,
           useValue: mockPrismaService,
+        },
+        {
+          provide: CryptoService,
+          useValue: mockCryptoService,
         },
       ],
     }).compile();
