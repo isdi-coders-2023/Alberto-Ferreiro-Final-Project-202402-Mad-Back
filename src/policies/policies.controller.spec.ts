@@ -22,10 +22,10 @@ const mockPrismaService = {
   },
 };
 
-const mockCryptoService = {
-  hash: jest.fn().mockResolvedValue('12345hash'),
+const fakeCryptoAssistant = {
+  hash: jest.fn().mockResolvedValue('somehashedthing'),
   compare: jest.fn().mockResolvedValue(true),
-  createToken: jest.fn().mockResolvedValue('token'),
+  createToken: jest.fn().mockResolvedValue('stuff'),
 };
 
 describe('PoliciesController', () => {
@@ -46,7 +46,7 @@ describe('PoliciesController', () => {
         },
         {
           provide: CryptoService,
-          useValue: mockCryptoService,
+          useValue: fakeCryptoAssistant,
         },
       ],
     }).compile();

@@ -25,14 +25,14 @@ describe('PolicyOwnerGuard', () => {
 
   it('should allow access if the user is the owner of the policy', async () => {
     const request = {
-      user: { id: 'user1' },
+      user: { id: 'user5' },
       params: { id: 'policy1' },
     };
     const policy = {
       id: 'policy1',
-      userId: 'user1',
-      carMake: 'CarBrand',
-      carModel: 'ModelX',
+      userId: 'user5',
+      carMake: 'Cruzcampo',
+      carModel: 'Especial',
       carAge: 5,
       plateNumber: 'XYZ1234',
       policyNumber: 101,
@@ -55,8 +55,8 @@ describe('PolicyOwnerGuard', () => {
     const policy = {
       id: 'policy1',
       userId: 'user1',
-      carMake: 'CarBrand',
-      carModel: 'ModelX',
+      carMake: 'Fanta',
+      carModel: 'Limón',
       carAge: 5,
       plateNumber: 'XYZ1234',
       policyNumber: 101,
