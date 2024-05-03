@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, compare } from 'bcrypt';
-import { SignUser } from 'src/users/entities/user.entity';
+import { LogUser } from '../../users/entities/user.entity';
 
 export type TokenPayload = {
   email: string;
+  id: string;
 };
 
 @Injectable()
@@ -23,8 +24,9 @@ export class CryptoService {
     return compare(value, hash);
   }
 
-  async createToken({ email }: SignUser) {
-    const payload: TokenPayload = { email };
+  async createToken({ email, id }: LogUser) {
+    console.log('ID en crypto:', id);
+    const payload: TokenPayload = { email, id };
     const token = await this.jwtService.signAsync(payload, {
       secret: this.configService.get('SECRET_JWT'),
     });

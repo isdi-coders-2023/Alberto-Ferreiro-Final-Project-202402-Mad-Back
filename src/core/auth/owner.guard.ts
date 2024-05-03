@@ -13,7 +13,9 @@ export class PolicyOwnerGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+
+    const user = request.payload;
+
     const policyId = request.params.id;
 
     const policy = await this.policiesService.findOne(policyId);

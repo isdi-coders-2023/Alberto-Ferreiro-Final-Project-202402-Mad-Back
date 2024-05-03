@@ -40,15 +40,14 @@ export class PoliciesController {
   findOne(@Param('id') id: string) {
     return this.policiesService.findOne(id);
   }
-
-  @UseGuards(LoggedGuard)
   @UseGuards(PolicyOwnerGuard)
+  @UseGuards(LoggedGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePolicyDto: UpdatePolicyDto) {
     return this.policiesService.update(id, updatePolicyDto);
   }
-  @UseGuards(LoggedGuard)
   @UseGuards(PolicyOwnerGuard)
+  @UseGuards(LoggedGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.policiesService.delete(id);
