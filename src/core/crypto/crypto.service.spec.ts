@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { hash, compare } from 'bcrypt';
-import { SignUser } from 'src/users/entities/user.entity';
+import { LogUser } from '../../users/entities/user.entity';
 jest.mock('bcrypt', () => ({
   hash: jest.fn().mockResolvedValue('hashedValue'),
   compare: jest.fn().mockResolvedValue(true),
@@ -59,10 +59,10 @@ describe('CryptoService', () => {
 
   describe('When we call createToken method', () => {
     it('should return a token', async () => {
-      const user: SignUser = { email: 'id@dominio.com', password: '' };
+      const user: LogUser = { email: 'id@dominio.com', id: '4' };
       const result = await service.createToken(user);
       expect(jwtServiceMock.signAsync).toHaveBeenCalledWith(
-        { email: 'id@dominio.com' },
+        { email: 'id@dominio.com', id: '4' },
         { secret: 'SECRET_JWT' },
       );
       expect(result).toBe('token');
