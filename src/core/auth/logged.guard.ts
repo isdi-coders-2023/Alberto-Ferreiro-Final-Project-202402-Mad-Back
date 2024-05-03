@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
@@ -14,12 +13,16 @@ export class LoggedGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const auth = request.headers.authorization;
+
     if (!auth) {
-      throw new BadRequestException('Authorization header is required');
+      throw new ForbiddenException('Authorization header is required');
     }
     const token = auth.split(' ')[1];
+
     try {
-      request.payload = await this.cryptoService.verifyToken(token);
+      const decodedToken = await this.cryptoService.verifyToken(token);
+
+      request.payload = decodedToken;
       return true;
     } catch (error) {
       throw new ForbiddenException('Invalid token');

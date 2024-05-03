@@ -21,7 +21,7 @@ describe('PolicyOwnerGuard', () => {
 
   it('should allow access if the user is the owner of the policy', async () => {
     const request = {
-      user: { id: 'user5' },
+      payload: { id: 'user5' },
       params: { id: 'policy1' },
     };
     const policy = {

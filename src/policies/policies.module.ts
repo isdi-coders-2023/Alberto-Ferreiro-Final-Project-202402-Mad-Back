@@ -5,9 +5,17 @@ import { PrismaService } from '../prisma/prisma.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CoreModule } from '../core/core.module';
 
+export const REPO_SERVICE = 'REPO_SERVICE';
 @Module({
   controllers: [PoliciesController],
-  providers: [PoliciesService, PrismaService],
+  providers: [
+    PoliciesService,
+    PrismaService,
+    {
+      provide: 'REPO_SERVICE',
+      useClass: PoliciesService,
+    },
+  ],
   imports: [PrismaModule, CoreModule],
 })
 export class PoliciesModule {}

@@ -19,3 +19,11 @@ export class SignUser {
   @IsString()
   password: string;
 }
+
+export class LogUser {
+  @IsString()
+  @IsEmail()
+  email: string;
+  @IsString()
+  id: string;
+}
