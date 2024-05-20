@@ -27,7 +27,8 @@ export class UsersController {
   ) {}
 
   @Post('register')
-  register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto) {
+    createUserDto.password = await this.crypto.hash(createUserDto.password);
     return this.usersService.create(createUserDto);
   }
 
@@ -45,7 +46,7 @@ export class UsersController {
     }
 
     if (!(await this.crypto.compare(password, user.password!))) {
-      throw new ForbiddenException('Email and password invalid');
+      throw new ForbiddenException('Email and password invalid2');
     }
 
     return { token: await this.crypto.createToken(user) };
@@ -60,6 +61,12 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
+  @UseGuards(LoggedGuard)
+  @Get(':id/details')
+  findOneWithBankAccount(@Param('id') id: string) {
+    return this.usersService.findOneWithBankAccount(id);
+  }
+
   @UseGuards(LoggedGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

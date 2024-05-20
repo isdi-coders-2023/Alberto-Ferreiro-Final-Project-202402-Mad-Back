@@ -12,6 +12,8 @@ const select = {
   id: true,
   email: true,
   name: true,
+  age: true,
+  licenseYear: true,
   policies: {
     select: {
       carMake: true,
@@ -22,6 +24,11 @@ const select = {
   },
 };
 
+const selectWithBankAccount = {
+  ...select,
+  bankAccount: true,
+};
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -29,7 +36,6 @@ export class UsersService {
     private crypto: CryptoService,
   ) {}
   async create(data: CreateUserDto) {
-    data.password = await this.crypto.hash(data.password);
     return this.prisma.user.create({
       data,
       select,
@@ -44,6 +50,19 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({
       where: { id: inputId },
       select,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User ${inputId} not found`);
+    }
+
+    return user;
+  }
+
+  async findOneWithBankAccount(inputId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: inputId },
+      select: selectWithBankAccount,
     });
 
     if (!user) {

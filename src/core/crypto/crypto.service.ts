@@ -25,7 +25,6 @@ export class CryptoService {
   }
 
   async createToken({ email, id }: LogUser) {
-    console.log('ID en crypto:', id);
     const payload: TokenPayload = { email, id };
     const token = await this.jwtService.signAsync(payload, {
       secret: this.configService.get('SECRET_JWT'),
@@ -34,7 +33,7 @@ export class CryptoService {
   }
 
   async verifyToken(token: string) {
-    return this.jwtService.verifyAsync<TokenPayload>(token, {
+    return await this.jwtService.verifyAsync<TokenPayload>(token, {
       secret: this.configService.get('SECRET_JWT'),
     });
   }
