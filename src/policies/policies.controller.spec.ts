@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PoliciesController } from './policies.controller';
 import { PoliciesService } from './policies.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreatePolicyDto } from './dto/create-policy.dto';
 import { CryptoService } from '../core/crypto/crypto.service';
+import { CreatePolicyDto } from './dto/create-policy.dto';
+import { UpdatePolicyDto } from './dto/update-policy.dto';
+import { LoggedGuard } from '../core/auth/logged.guard';
+import { PolicyOwnerGuard } from '../core/auth/owner.guard';
 
 const mockPoliciesService = {
   findAll: jest.fn().mockResolvedValue([]),
@@ -11,88 +13,91 @@ const mockPoliciesService = {
   create: jest.fn().mockResolvedValue({}),
   update: jest.fn().mockResolvedValue({}),
   delete: jest.fn().mockResolvedValue({}),
+  findByUserId: jest.fn().mockResolvedValue([]),
 };
 
-const mockPrismaService = {
-  policy: {
-    findMany: jest.fn().mockResolvedValue([]),
-    findUnique: jest.fn().mockReturnValue({}),
-    create: jest.fn().mockReturnValue({}),
-    update: jest.fn().mockReturnValue({}),
-  },
-};
-
-const fakeCryptoAssistant = {
-  hash: jest.fn().mockResolvedValue('somehashedthing'),
-  compare: jest.fn().mockResolvedValue(true),
-  createToken: jest.fn().mockResolvedValue('stuff'),
+const mockCryptoService = {
+  verifyToken: jest.fn().mockResolvedValue(true),
 };
 
 describe('PoliciesController', () => {
   let controller: PoliciesController;
+  let service: PoliciesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PoliciesController],
       providers: [
-        PoliciesService,
-        {
-          provide: PoliciesService,
-          useValue: mockPoliciesService,
-        },
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
-        },
-        {
-          provide: CryptoService,
-          useValue: fakeCryptoAssistant,
-        },
+        { provide: PoliciesService, useValue: mockPoliciesService },
+        { provide: CryptoService, useValue: mockCryptoService },
+        LoggedGuard,
+        PolicyOwnerGuard,
       ],
     }).compile();
 
     controller = module.get<PoliciesController>(PoliciesController);
+    service = module.get<PoliciesService>(PoliciesService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-  describe('When we use the method findAll', () => {
-    it('should return all users', async () => {
+
+  describe('findAll', () => {
+    it('should return an array of policies', async () => {
       const result = await controller.findAll();
-      expect(mockPoliciesService.findAll).toHaveBeenCalled();
+      expect(service.findAll).toHaveBeenCalled();
       expect(result).toEqual([]);
     });
   });
-  describe('When we use the method findOne', () => {
-    it('should return the user with the id', async () => {
+
+  describe('findOne', () => {
+    it('should return a single policy', async () => {
       const result = await controller.findOne('1');
-      expect(mockPoliciesService.findOne).toHaveBeenCalled();
+      expect(service.findOne).toHaveBeenCalledWith('1');
       expect(result).toEqual({});
     });
   });
-  describe('When we use the method create', () => {
+
+  describe('findByUserId', () => {
+    it('should return policies for a specific user', async () => {
+      const result = await controller.findByUserId('user1');
+      expect(service.findByUserId).toHaveBeenCalledWith('user1');
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('create', () => {
     it('should create a new policy', async () => {
-      const mockPolicyDto = {} as CreatePolicyDto;
-      const result = await controller.create('1', mockPolicyDto);
-      expect(mockPoliciesService.create).toHaveBeenCalled();
+      const mockPolicyDto: CreatePolicyDto = {
+        policyType: 'auto',
+        carMake: 'Toyota',
+        carModel: 'Corolla',
+        carAge: 5,
+        plateNumber: 'XYZ123',
+        userId: 'user1',
+      };
+      const result = await controller.create(mockPolicyDto);
+      expect(service.create).toHaveBeenCalledWith('user1', mockPolicyDto);
       expect(result).toEqual({});
     });
   });
-  describe('When we use the method update', () => {
+
+  describe('update', () => {
     it('should update a policy', async () => {
-      const mockPolicyDto = {
-        policyType: '12345',
-      } as CreatePolicyDto;
-      const result = await controller.update('1', mockPolicyDto);
-      expect(mockPoliciesService.update).toHaveBeenCalled();
+      const mockUpdatePolicyDto: UpdatePolicyDto = {
+        policyType: 'home',
+      };
+      const result = await controller.update('1', mockUpdatePolicyDto);
+      expect(service.update).toHaveBeenCalledWith('1', mockUpdatePolicyDto);
       expect(result).toEqual({});
     });
   });
-  describe('When we use the method delete', () => {
-    it('should delete and return a policy', async () => {
+
+  describe('delete', () => {
+    it('should delete a policy', async () => {
       const result = await controller.delete('1');
-      expect(mockPoliciesService.delete).toHaveBeenCalled();
+      expect(service.delete).toHaveBeenCalledWith('1');
       expect(result).toEqual({});
     });
   });

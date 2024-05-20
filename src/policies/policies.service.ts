@@ -24,9 +24,9 @@ const select = {
 @Injectable()
 export class PoliciesService {
   constructor(private prisma: PrismaService) {}
-  async create(id: string, data: CreatePolicyDto) {
+  async create(userId: string, data: CreatePolicyDto) {
     return this.prisma.policy.create({
-      data,
+      data: { ...data, userId },
       select,
     });
   }
@@ -44,6 +44,12 @@ export class PoliciesService {
       throw new NotFoundException(`Policy ${inputId} not found`);
     }
     return policy;
+  }
+  async findByUserId(userId: string) {
+    return this.prisma.policy.findMany({
+      where: { userId },
+      select,
+    });
   }
 
   async update(inputId: string, data: UpdatePolicyDto) {

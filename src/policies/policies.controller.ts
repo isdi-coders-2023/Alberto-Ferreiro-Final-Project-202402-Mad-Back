@@ -20,15 +20,17 @@ import { LoggedGuard } from '../core/auth/logged.guard';
   new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
+    transform: true,
   }),
 )
 @Controller('policies')
 export class PoliciesController {
   constructor(private readonly policiesService: PoliciesService) {}
-
+  @UseGuards(LoggedGuard)
   @Post('create')
-  create(@Param('id') id: string, @Body() createPolicyDto: CreatePolicyDto) {
-    return this.policiesService.create(id, createPolicyDto);
+  create(@Body() data: CreatePolicyDto) {
+    const userId = data.userId;
+    return this.policiesService.create(userId, data);
   }
   @UseGuards(LoggedGuard)
   @Get()
@@ -40,6 +42,12 @@ export class PoliciesController {
   findOne(@Param('id') id: string) {
     return this.policiesService.findOne(id);
   }
+  @UseGuards(LoggedGuard)
+  @Get('user/:userId')
+  findByUserId(@Param('userId') userId: string) {
+    return this.policiesService.findByUserId(userId);
+  }
+
   @UseGuards(PolicyOwnerGuard)
   @UseGuards(LoggedGuard)
   @Patch(':id')

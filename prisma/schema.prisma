@@ -17,7 +17,7 @@ model User {
 id String @id @default(uuid())
 name String
 email String @unique
-password String
+password String 
 age Int
 licenseYear Int
 bankAccount String?
@@ -41,11 +41,12 @@ model Claim {
 id String @id @default(uuid())
 policyId String
 operatorId String?
-status String
+status String  @default("open")
 type String
 phoneNumber String
 address String
 claimNumber Int @default(autoincrement())
+imageUrl     String?
 policy Policy @relation(fields: [policyId], references: [id])
 operator Operator? @relation(fields: [operatorId], references: [id])
 }
